@@ -109,8 +109,9 @@ vectorLayer = new ol.layer.Vector({
 
 console.log("finish");
 
+//alert("ciao sono un alert");
 
- // Android.showToast("map start");
+    Android.showToast("map start");
 
     map.addLayer(vectorLayer);
 

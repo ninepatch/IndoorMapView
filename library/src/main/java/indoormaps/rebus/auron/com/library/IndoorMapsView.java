@@ -1,5 +1,6 @@
 package indoormaps.rebus.auron.com.library;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,9 +8,13 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.WindowManager;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 /**
@@ -19,12 +24,10 @@ import android.widget.RelativeLayout;
 public class IndoorMapsView extends RelativeLayout {
 
 
-    private WebView webView;
 
     public IndoorMapsView(Context context) {
         super(context);
         Log.d("IndoorMapsView", "base costructor called;");
-
     }
 
 
@@ -48,8 +51,9 @@ public class IndoorMapsView extends RelativeLayout {
         Log.d("IndoorMapsView", "second costructor called;");
     }
 
+    @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
     private void initMapsView(Context context) {
-        webView = new WebView(context);
+
 
 
         WebView indoorMaps = new WebView(context);
@@ -58,12 +62,41 @@ public class IndoorMapsView extends RelativeLayout {
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         indoorMaps.setLayoutParams(params);
         this.addView(indoorMaps);
-        webView.addJavascriptInterface(new IndoorViewListener(context), "Android");
+        indoorMaps.getSettings().setJavaScriptEnabled(true);
+        indoorMaps.addJavascriptInterface(new IndoorViewListener(context), "Android");
         indoorMaps.setWebViewClient(new WebClient());
         indoorMaps.getSettings().setSupportZoom(true);
-        indoorMaps.getSettings().setJavaScriptEnabled(true);
+
+  //      indoorMaps.evaluateJavascript();
+
         indoorMaps.getSettings().setUseWideViewPort(true);
+        indoorMaps.setWebChromeClient(new ChromeClient());
         indoorMaps.loadUrl("file:///android_asset/maps.html");
+    }
+
+    public class ChromeClient extends WebChromeClient {
+
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            return true;//super.onJsAlert(view, url, message, result);
+        }
+
+        @Override
+        public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+            return super.onJsConfirm(view, url, message, result);
+        }
+
+        @Override
+        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+            return super.onJsPrompt(view, url, message, defaultValue, result);
+        }
+
+        @Override
+        public boolean onJsBeforeUnload(WebView view, String url, String message, JsResult result) {
+            return super.onJsBeforeUnload(view, url, message, result);
+        }
+
     }
 
     public class WebClient extends WebViewClient {
