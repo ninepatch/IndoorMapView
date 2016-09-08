@@ -3,11 +3,11 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="4dp"
     android:orientation="vertical">
 
     <indoormaps.rebus.auron.com.library.IndoorMapsView
         android:id="@+id/indorMaps"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">IndoorMapsView</string>
+    <string name="marker_name">Test</string>
 </resources>

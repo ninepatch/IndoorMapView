@@ -1,17 +1,10 @@
-var puntatori = [{
-    lat: 0.01623104774679782,
-    long: 0.00436225936948631,
-    name: 'Prova',
-    numero: '1'
-} ];
-
-
 var extent = [0, 0, 3508, 2480];
-var map;
-  var startx = 0;
-  var starty = 0;
-
-
+var map="";
+var startx = 0;
+var starty = 0;
+var vectorSource;
+var vectorLayer;
+var debug=false;
 var projection = new ol.proj.Projection({
     code: 'xkcd-image',
     units: 'pixels',
@@ -19,18 +12,34 @@ var projection = new ol.proj.Projection({
 });
 
 var arrayFeature = [];
+vectorSource = new ol.source.Vector({
+    features: arrayFeature,
+});
 
-function addMarker(markerLat,markerLon,markerName,iconPath){
+vectorLayer = new ol.layer.Vector({
+    source: vectorSource,
+});
 
+function addMarker(markerLat,markerLon,markerName,iconPath,markerId,showLabel,labelPx,labelColor){
+
+var label="";
  var marker = new ol.Feature({
             geometry: new ol.geom.Point(ol.proj.transform([markerLat,markerLon],
                 'EPSG:4326', 'EPSG:3857')),
+            id: markerId,
             name: markerName,
+            lat:markerLat,
+            lon:markerLon,
             population: 4000,
             rainfall: 500
         });
 
+if(showLabel) {
+label=markerName;
+}
 
+var fontBuild= ""+labelPx+"px Montserrat";
+printConsole(fontBuild);
           var style = new ol.style.Style({
 
                     stroke: new ol.style.Stroke({
@@ -38,11 +47,11 @@ function addMarker(markerLat,markerLon,markerName,iconPath){
                         color: [255, 0, 0, 1],
                     }),
                     text: new ol.style.Text({
-                        text: markerName,
-                        font: '18px Montserrat',
+                        text: label,
+                        font: fontBuild,
                         offsetY: -40,
                         fill: new ol.style.Fill({
-                            color: '#a22e44'
+                            color: labelColor
                         })
                     }),
                     image: new ol.style.Icon({
@@ -50,26 +59,36 @@ function addMarker(markerLat,markerLon,markerName,iconPath){
                     })
                 });
                 marker.setStyle(style);
-                arrayFeature.push(marker);
+                vectorSource.addFeature(marker);
+                printConsole("add Marker, lat: "+markerLat+" lng: "+markerLon+" name: "+markerName+" iconPath: "+iconPath+" id: "+markerId);
+}
+
+function removeMarker(markerId){
+printConsole("marker processing remove ,markerId: "+markerId);
+  var features = vectorSource.getFeatures();
+   if (features == null && features.length <= 0) {
+   Android.removeMarker(-1);
+   printConsole("marker not removed");
+   return;
+   }
+    for (marker in features) {
+
+         var properties = features[marker].getProperties();
+
+ printConsole("marker search :"+properties.id);
+    if(properties.id ==markerId){
+    vectorSource.removeFeature(features[marker]);
+    printConsole("marker removed");
+    Android.removeMarkerCallback(markerId);
+    break;
+}
+    }
 
 }
 
-
-var vectorSource;
-var vectorLayer;
-
-
-
 function init(backgroungPath) {
 
-vectorSource = new ol.source.Vector({
-    features: arrayFeature,
-});
-
-
-vectorLayer = new ol.layer.Vector({
-    source: vectorSource,
-});
+printConsole("init call, mapImage path: "+backgroungPath);
 
     map = new ol.Map({
         layers: [
@@ -98,44 +117,50 @@ vectorLayer = new ol.layer.Vector({
         })
     });
 
-
+/*
          var deviceOrientation = new ol.DeviceOrientation({
               tracking: true
             });
+*/
+    //        deviceOrientation.on('change:heading', onChangeHeading);
 
-            deviceOrientation.on('change:heading', onChangeHeading);
 
 
 
-console.log("finish");
 
-//alert("ciao sono un alert");
-
-    Android.showToast("map start");
+    // Android.showToast("map start");
 
     map.addLayer(vectorLayer);
 
     map.on("click", function (evt) {
-    console.log("CLIK MAPS");
-        evt.preventDefault();
+    evt.preventDefault();
+
+
 
         var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-        console.log(lonlat);
-/*
+
+
+
 
         var tmp_feature = map.forEachFeatureAtPixel(evt.pixel,
             function (feature, layer) {
                 return feature;
             });
+
         // click su feature
         if (tmp_feature) {
-
-
-
+        printConsole("click on marker, id: "+tmp_feature.get('id'));
+        Android.onMarkerClick(parseInt(tmp_feature.get('id')));
+        return;
         }
-  */  });
+
+        printConsole("click on map, lat: "+lonlat[0]+" lng: "+lonlat[1]);
+        Android.onMapClick(lonlat[0],lonlat[1]);
 
 
+    });
+
+/*
   map.getViewport().addEventListener('touchstart', function(e){
       var touchobj = e.changedTouches[0]; // reference first touch point (ie: first finger)
       startx = parseInt(touchobj.clientX); // get x position of touch point relative to left edge of browser
@@ -153,14 +178,16 @@ console.log("finish");
   },false);
 
 
-
-
-
+*/
 }
+
+
+/*
                  function onChangeHeading(event) {
                   var heading = event.target.getHeading();
                   var el = document.getElementById('location');
                   el.style['-webkit-transform'] = 'rotate('+heading+'rad)';
+                  el.style['transform'] = 'rotate('+heading+'rad)';
                   el.style['transform'] = 'rotate('+heading+'rad)';
                 }
 
@@ -172,7 +199,25 @@ console.log("finish");
     Android.showToast("map click: "+lonlat);
 
  }
+ */
 
 
 
+ function setDebug(boolean){
+ debug=boolean;
+ }
 
+ function changeBackgroundColor(color){
+ printConsole("background color chanche to: "+color);
+ document.getElementById("map").style.backgroundColor = color;
+ }
+
+function printConsole(message){
+
+if(debug){
+
+console.log(message);
+
+}
+
+}

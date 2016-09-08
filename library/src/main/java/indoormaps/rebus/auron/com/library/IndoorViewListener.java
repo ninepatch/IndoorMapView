@@ -1,23 +1,90 @@
 package indoormaps.rebus.auron.com.library;
 
 import android.content.Context;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+
+import indoormaps.rebus.auron.com.library.callback.OnMapViewInizializate;
+import indoormaps.rebus.auron.com.library.callback.OnMarkerTapListener;
+import indoormaps.rebus.auron.com.library.callback.OnTapListener;
 
 /**
  * Created by luca on 6/22/16.
  */
 public class IndoorViewListener {
-    Context mContext;
 
+    private Context mContext;
+    private OnMarkerTapListener onMarkerTapListener;
+    private OnTapListener onTapListener;
+    private OnMapViewInizializate onMapViewInizializate;
 
-   public  IndoorViewListener(Context c) {
+    public IndoorViewListener(Context c) {
         mContext = c;
     }
 
+    public void setOnMarkerTapListener(OnMarkerTapListener onMarkerTapListener) {
+        this.onMarkerTapListener = onMarkerTapListener;
+    }
+
+    public void setOnTapListener(OnTapListener onTapListener) {
+        this.onTapListener = onTapListener;
+    }
+
+    public void setOnMapViewInizializate(OnMapViewInizializate onMapViewInizializate) {
+        this.onMapViewInizializate = onMapViewInizializate;
+    }
 
     @JavascriptInterface
-    public void showToast(String toast) {
-        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+    public void showToast(String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @JavascriptInterface
+    public void removeMarkerCallback(int markerId) {
+        for (Marker marker : IndoorMapsView.markers) {
+            if (marker.getId() == markerId) {
+                IndoorMapsView.markers.remove(marker);
+                break;
+            }
+        }
+    }
+
+    @JavascriptInterface
+    public void onMarkerClick(int id) {
+        Log.d("onMarkerClick", "onMarkerClick: " + id);
+        if (onMarkerTapListener != null) {
+            if (!IndoorMapsView.markers.isEmpty()) {
+                Log.d("onMarkerClick", "not empty");
+                for (Marker marker : IndoorMapsView.markers) {
+                    Log.d("onMarkerClick", "maker searche : "+marker.getId());
+                    if (marker.getId() == id) {
+                        onMarkerTapListener.onMarkerTap(marker);
+                        break;
+                    }
+                }
+            }else{
+                Log.d("onMarkerClick", "maker LIST EMPTY");
+            }
+        }
+    }
+
+    @JavascriptInterface
+    public void onMapClick(double lat, double lon) {
+        if (onTapListener != null)
+            onTapListener.onTap(lat, lon);
+    }
+
+
+    public void onMapViewInizializate() {
+        if (onMapViewInizializate != null) {
+            onMapViewInizializate.onMapinizializate();
+        }
+    }
+
+    public void onMapLoading() {
+        if (onMapViewInizializate != null) {
+            onMapViewInizializate.onMapLoading();
+        }
     }
 }
