@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                  
                  indoorMapsView.init("mappa2.png", ZOOM.LEVEL4); //image from assets or put link
                  indoorMapsView.setBackgroundColorRes(R.color.colorPrimary);
-                       
+                      
                        }
 
         });
@@ -98,4 +98,39 @@ public class MainActivity extends AppCompatActivity {
 ```java
 
 
+  indoorMapsView.getIndoorViewListener().setOnMarkerTapListener(new OnMarkerTapListener() {
+            @Override
+            public void onMarkerTap(Marker marker) {
+         
+            }
+        });
 
+        indoorMapsView.getIndoorViewListener().setOnTapListener(new OnTapListener() {
+            @Override
+            public void onTap(double lat, double lon) {
+                
+            }
+        });
+
+```
+#### Center Map
+
+```java
+
+    indoorMapsView.setCenter(lat, lng);
+
+```
+
+
+#### Animation
+
+
+ANIMATION type: PAN, FLY ,SPIRAL 
+
+center map to point or marker whit animation
+
+```java
+
+  indoorMapsView.goToAnimate(marker, ANIMATION.PAN);
+
+```
