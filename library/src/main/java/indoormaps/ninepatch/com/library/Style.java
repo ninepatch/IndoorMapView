@@ -1,4 +1,4 @@
-package indoormaps.rebus.auron.com.library;
+package indoormaps.ninepatch.com.library;
 
 import android.content.Context;
 import android.support.annotation.ColorRes;

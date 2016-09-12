@@ -1,6 +1,8 @@
-package indoormaps.rebus.auron.com.library;
+package indoormaps.ninepatch.com.library;
 
 import android.content.Context;
+
+import indoormaps.ninepatch.com.library.zoom.ZOOM;
 
 /**
  * Created by luca on 05/09/16.

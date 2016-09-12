@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <indoormaps.rebus.auron.com.library.IndoorMapsView
+    <indoormaps.ninepatch.com.library.IndoorMapsView
         android:id="@+id/indorMaps"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

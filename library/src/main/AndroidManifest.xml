@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="indoormaps.rebus.auron.com.library">
+    package="indoormaps.ninepatch.com.library">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <application

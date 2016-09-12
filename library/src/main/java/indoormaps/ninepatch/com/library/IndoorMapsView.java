@@ -1,18 +1,14 @@
-package indoormaps.rebus.auron.com.library;
+package indoormaps.ninepatch.com.library;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.support.annotation.UiThread;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
@@ -21,13 +17,12 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import indoormaps.rebus.auron.com.library.callback.OnMarkerTapListener;
-import indoormaps.rebus.auron.com.library.callback.OnTapListener;
+import indoormaps.ninepatch.com.library.animate.ANIMATION;
+import indoormaps.ninepatch.com.library.zoom.ZOOM;
 
 
 /**
@@ -43,6 +38,7 @@ public class IndoorMapsView extends RelativeLayout {
     private IndoorViewListener indoorViewListener;
     private WebView indoorMaps;
     private Context context;
+    private ZOOM zoom;
 
     public IndoorMapsView(Context context) {
         super(context);
@@ -114,7 +110,8 @@ public class IndoorMapsView extends RelativeLayout {
         for (Marker markerTest : markers) {
             if (markerTest.getId() == marker.getId()) {
                 if (DEBUG)
-                    Log.e(TAG, "marker id was duplicated");
+                    Log.e(TAG, "marker id was duplicated ---- id: " + marker.getId());
+
                 return;
             }
         }
@@ -149,8 +146,69 @@ public class IndoorMapsView extends RelativeLayout {
 
     }
 
-    public void init(String path) {
-        indoorMaps.loadUrl("javascript:init('" + path + "');");
+    public void setZoom(ZOOM zoom) {
+        setZoom(zoom.value());
+    }
+
+    public ZOOM getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(final int zoom) {
+        this.zoom = ZOOM.fromInt(zoom);
+        indoorMaps.post(new Runnable() {
+            @Override
+            public void run() {
+                indoorMaps.loadUrl("javascript:setZoom('" + zoom + "');");
+            }
+        });
+
+    }
+
+    public int getZoomIntValue() {
+        return zoom.value();
+    }
+
+    public void setCenter(Marker marker) {
+        setCenter(marker.getLat(), marker.getLon());
+    }
+
+    public void setCenter(final double lat, final double lng) {
+        indoorMaps.post(new Runnable() {
+            @Override
+            public void run() {
+                indoorMaps.loadUrl("javascript:setCenter('" + lat + "','" + lng + "');");
+            }
+        });
+
+    }
+
+    public void goToAnimate(Marker marker) {
+        goToAnimate(marker.getLat(), marker.getLon(), ANIMATION.PAN);
+    }
+
+    public void goToAnimate(Marker marker, ANIMATION animation) {
+        goToAnimate(marker.getLat(), marker.getLon(), animation);
+    }
+
+    public void goToAnimate(final double lat, final double lng, final ANIMATION animation) {
+        indoorMaps.post(new Runnable() {
+            @Override
+            public void run() {
+                indoorMaps.loadUrl("javascript:goToAnimate('" + lat + "','" + lng + "','" + animation.value() + "');");
+            }
+        });
+
+    }
+
+    public void init(String path, ZOOM zoom) {
+        Log.d(TAG, "zoom: " + zoom.value());
+        init(path, zoom.value());
+    }
+
+    public void init(String path, int zoomLevel) {
+        this.zoom = ZOOM.fromInt(zoomLevel);
+        indoorMaps.loadUrl("javascript:init('" + path + "','" + zoomLevel + "');");
     }
 
     private void changeBackgroundColor(String color) {

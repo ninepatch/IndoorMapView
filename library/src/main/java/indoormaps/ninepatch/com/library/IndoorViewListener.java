@@ -1,13 +1,13 @@
-package indoormaps.rebus.auron.com.library;
+package indoormaps.ninepatch.com.library;
 
 import android.content.Context;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import indoormaps.rebus.auron.com.library.callback.OnMapViewInizializate;
-import indoormaps.rebus.auron.com.library.callback.OnMarkerTapListener;
-import indoormaps.rebus.auron.com.library.callback.OnTapListener;
+import indoormaps.ninepatch.com.library.callback.OnMapViewInizializate;
+import indoormaps.ninepatch.com.library.callback.OnMarkerTapListener;
+import indoormaps.ninepatch.com.library.callback.OnTapListener;
 
 /**
  * Created by luca on 6/22/16.

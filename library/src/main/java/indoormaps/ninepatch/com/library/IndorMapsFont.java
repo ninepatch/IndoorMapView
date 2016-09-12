@@ -1,4 +1,4 @@
-package indoormaps.rebus.auron.com.library;
+package indoormaps.ninepatch.com.library;
 
 /**
  * Created by luca on 07/09/16.

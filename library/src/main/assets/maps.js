@@ -1,3 +1,4 @@
+
 var extent = [0, 0, 3508, 2480];
 var map="";
 var startx = 0;
@@ -5,6 +6,7 @@ var starty = 0;
 var vectorSource;
 var vectorLayer;
 var debug=false;
+
 var projection = new ol.proj.Projection({
     code: 'xkcd-image',
     units: 'pixels',
@@ -23,13 +25,12 @@ vectorLayer = new ol.layer.Vector({
 function addMarker(markerLat,markerLon,markerName,iconPath,markerId,showLabel,labelPx,labelColor){
 
 var label="";
- var marker = new ol.Feature({
-            geometry: new ol.geom.Point(ol.proj.transform([markerLat,markerLon],
-                'EPSG:4326', 'EPSG:3857')),
+var marker = new ol.Feature({
+            geometry: new ol.geom.Point([markerLat,markerLon]),
             id: markerId,
             name: markerName,
             lat:markerLat,
-            lon:markerLon,
+            lgn:markerLon,
             population: 4000,
             rainfall: 500
         });
@@ -86,7 +87,7 @@ printConsole("marker processing remove ,markerId: "+markerId);
 
 }
 
-function init(backgroungPath) {
+function init(backgroungPath,zoomLevel) {
 
 printConsole("init call, mapImage path: "+backgroungPath);
 
@@ -97,6 +98,8 @@ printConsole("init call, mapImage path: "+backgroungPath);
                     url: backgroungPath,
                     projection: projection,
                     imageExtent: extent,
+                    imageSize: [3508, 2480],
+
                 })
             }),
             new ol.layer.Tile({
@@ -111,9 +114,11 @@ printConsole("init call, mapImage path: "+backgroungPath);
 
         target: 'map',
         view: new ol.View({
-            projection: projection,
-            center: ol.extent.getCenter(extent),
-            zoom: 1,
+       projection: projection,
+       center: ol.extent.getCenter(extent),
+       zoom: zoomLevel,
+       maxZoom: 10,
+       minZoom: 1
         })
     });
 
@@ -125,23 +130,14 @@ printConsole("init call, mapImage path: "+backgroungPath);
     //        deviceOrientation.on('change:heading', onChangeHeading);
 
 
-
-
-
-    // Android.showToast("map start");
-
     map.addLayer(vectorLayer);
 
     map.on("click", function (evt) {
     evt.preventDefault();
 
 
-
-        var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-
-
-
-
+var lonlat= evt.coordinate;
+  printConsole("click, lat: "+lonlat[0]+" lng: "+lonlat[1]);
         var tmp_feature = map.forEachFeatureAtPixel(evt.pixel,
             function (feature, layer) {
                 return feature;
@@ -152,9 +148,9 @@ printConsole("init call, mapImage path: "+backgroungPath);
         printConsole("click on marker, id: "+tmp_feature.get('id'));
         Android.onMarkerClick(parseInt(tmp_feature.get('id')));
         return;
-        }
+         }
 
-        printConsole("click on map, lat: "+lonlat[0]+" lng: "+lonlat[1]);
+        printConsole("click on map");
         Android.onMapClick(lonlat[0],lonlat[1]);
 
 
@@ -183,7 +179,8 @@ printConsole("init call, mapImage path: "+backgroungPath);
 
 
 /*
-                 function onChangeHeading(event) {
+
+               function onChangeHeading(event) {
                   var heading = event.target.getHeading();
                   var el = document.getElementById('location');
                   el.style['-webkit-transform'] = 'rotate('+heading+'rad)';
@@ -207,9 +204,11 @@ printConsole("init call, mapImage path: "+backgroungPath);
  debug=boolean;
  }
 
- function changeBackgroundColor(color){
+ function changeBackgroundColor(color) {
+
  printConsole("background color chanche to: "+color);
  document.getElementById("map").style.backgroundColor = color;
+
  }
 
 function printConsole(message){
@@ -220,4 +219,81 @@ console.log(message);
 
 }
 
+}
+
+function setZoom(zoom){
+map.getView().setZoom(zoom);
+}
+
+function goToAnimate(lat, lng , type) {
+
+printConsole("goToAnimate lat: "+lat+" lng: "+lng+" type: "+type);
+
+	var position = [lat,lng];
+    var duration = 2000;
+    var start = +new Date();
+
+if(type=='FLY'){
+
+printConsole("FLY");
+
+
+
+    var start = +new Date();
+    var pan = ol.animation.pan({
+        duration: duration,
+        source: /** @type {ol.Coordinate} */
+            (map.getView().getCenter()),
+        start: start
+    });
+
+    var bounce = ol.animation.bounce({
+        duration: duration,
+        resolution: 4 * map.getView().getResolution(),
+        start: start
+    });
+    map.beforeRender(pan, bounce);
+    map.getView().setCenter(position);
+    map.getView().setZoom(4);
+
+	}
+
+	if(type=='PAN'){
+
+printConsole("PAN");
+	      var pan = ol.animation.pan({
+              duration: duration,
+              source: (map.getView().getCenter())
+            });
+            map.beforeRender(pan);
+            map.getView().setCenter(position);
+
+	}
+
+if(type=='SPIRAL'){
+
+printConsole("SPIRAL");
+        var pan = ol.animation.pan({
+          duration: duration,
+          source: (map.getView().getCenter()),
+          start: start
+        });
+        var bounce = ol.animation.bounce({
+          duration: duration,
+          resolution: 2 * map.getView().getResolution(),
+          start: start
+        });
+        var rotate = ol.animation.rotate({
+          duration: duration,
+          rotation: -4 * Math.PI,
+          start: start
+        });
+        map.beforeRender(pan, bounce, rotate);
+        map.getView().setCenter(position);
+        }
+}
+
+function setCenter(lat,lng){
+	 map.getView().setCenter([lat,lng]);
+	 map.render();
 }
