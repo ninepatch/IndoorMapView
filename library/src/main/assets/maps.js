@@ -1,4 +1,12 @@
 
+/*
+
+Develop By Rurio Luca
+
+Using OL3 api
+
+*/
+
 var extent = [0, 0, 3508, 2480];
 var map="";
 var startx = 0;

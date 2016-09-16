@@ -39,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
                 indoorMapsView.setDebug(true);//enable loggin
                 Marker marker = new Marker(MainActivity.this);
                 marker.setId(1);
-
-                // marker.setLat(0.015874738);
-                // marker.setLon(0.019710949);
                 marker.setLat(36.8271);
                 marker.setLon(32.9731);
                 marker.setName(getString(R.string.marker_name));
@@ -68,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 //indoorMapsView.addMarker(marker);
 
                 // indoorMapsView.setZoom(ZOOM.LEVEL4);
-
             }
-
         });
 
         indoorMapsView.getIndoorViewListener().setOnMarkerTapListener(new OnMarkerTapListener() {
