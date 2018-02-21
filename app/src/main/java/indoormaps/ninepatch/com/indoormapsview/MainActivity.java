@@ -1,6 +1,9 @@
 package indoormaps.ninepatch.com.indoormapsview;
 
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
@@ -17,6 +20,7 @@ import indoormaps.ninepatch.com.library.zoom.ZOOM;
 public class MainActivity extends AppCompatActivity {
 
     private IndoorMapsView indoorMapsView;
+    private Marker marker, marker2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             public void onMapinizializate() {
                 //dismiss progress
                 indoorMapsView.setDebug(true);//enable loggin
-                Marker marker = new Marker(MainActivity.this);
+                marker = new Marker(MainActivity.this);
                 marker.setId(1);
                 marker.setLat(36.8271);
                 marker.setLon(32.9731);
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 style.setShowLabel(true);
                 marker.setStyle(style);
 
-                Marker marker2 = new Marker(MainActivity.this);
+                marker2 = new Marker(MainActivity.this);
                 marker2.setId(2);
                 //marker2.setImageLink("http://iconshow.me/media/images/Mixed/small-n-flat-icon/png/256/map-marker.png");
                 marker2.setImageLink("marker1.png");
@@ -80,9 +84,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTap(double lat, double lon) {
                 Log.d("MainActivity", "Map click: " + lat + "lng : " + lon);
-                    indoorMapsView.setCenter(lat, lon);
+                indoorMapsView.setCenter(lat, lon);
             }
         });
+
+        indoorMapsView.getIndoorViewListener().setOnMarkerTapListener(new OnMarkerTapListener() {
+            @Override
+            public void onMarkerTap(final Marker currentMarker) {
+
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(MainActivity.this);
+                }
+                builder.setTitle("Delete marker")
+                        .setMessage("Are you sure you want to delete this marker?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                indoorMapsView.removeMarker(currentMarker.getId());
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setCancelable(true)
+                        .show();
+            }
+        });
+
     }
 
 

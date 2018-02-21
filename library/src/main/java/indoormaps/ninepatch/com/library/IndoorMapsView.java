@@ -144,6 +144,16 @@ public class IndoorMapsView extends RelativeLayout {
             }
         });
 
+        for (Marker markerTest : markers) {
+            if (markerTest.getId() == markerId) {
+                if (DEBUG)
+                    Log.e(TAG, "marker id was duplicated ---- id: " + markerId);
+                markers.remove(markerTest);
+                return;
+            }
+        }
+
+
     }
 
     public void setZoom(ZOOM zoom) {
