@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/ninepatch/IndoorMapView/blob/master/License)
 [![GitHub stars](https://img.shields.io/github/stars/ninepatch/IndoorMapView.svg)](https://github.com/ninepatch/IndoorMapView/stargazers)
 
-###BETA Version
+### BETA Version
 
 Android indoor map work in progress...
 
