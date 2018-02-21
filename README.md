@@ -4,7 +4,8 @@
 [![Platform (Android)](https://img.shields.io/badge/platform-Android-blue.svg?style=flat-square)](http://www.android.com)
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/ninepatch/IndoorMapView/blob/master/License)
 [![GitHub stars](https://img.shields.io/github/stars/ninepatch/IndoorMapView.svg)](https://github.com/ninepatch/IndoorMapView/stargazers)
-##BETA Version
+
+###BETA Version
 
 Android indoor map work in progress...
 
@@ -92,6 +93,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 ```
+
+
+#### remove marker
+
+```java
+
+                  indoorMapsView.removeMarker(marker.getId());
+                  // OR
+                  indoorMapsView.removeMarker(marker);
+
+```
+
 
 #### Listner
 
