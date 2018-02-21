@@ -18,7 +18,7 @@ The library requires Android **API Level 9+**.
 
 ### How to use
 
-####activity_main.xml
+#### activity_main.xml
 ```java
       <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
