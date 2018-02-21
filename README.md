@@ -35,7 +35,7 @@ The library requires Android **API Level 9+**.
 </LinearLayout>
 ```
 
-####MainActivity.class
+#### MainActivity.class
 
 ```java
 public class MainActivity extends AppCompatActivity {
