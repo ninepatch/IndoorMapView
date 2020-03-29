@@ -1,7 +1,7 @@
 package indoormaps.ninepatch.com.library;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
+import androidx.annotation.ColorRes;
 
 /**
  * Created by luca on 07/09/16.
