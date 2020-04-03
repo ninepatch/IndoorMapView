@@ -22,7 +22,7 @@ allprojects {
 Add the dependency
 ```
 dependencies {
-     implementation 'com.github.quwepiro:IndoorMapView:0cf78dcbd1'
+   	        implementation 'com.github.ninepatch:IndoorMapView:Tag'
 }
 ```
 
