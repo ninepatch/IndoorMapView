@@ -9,10 +9,26 @@
 
 Android indoor map work in progress...
 
+## Installation
+Add it in your root build.gradle at the end of repositories:
+```
+allprojects {
+  repositories {
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
+
+Add the dependency
+```
+dependencies {
+     implementation 'com.github.quwepiro:IndoorMapView:0cf78dcbd1'
+}
+```
 
 ### Requirements
 
-The library requires Android **API Level 9+**.
+The library requires Android **API Level 14+**.
 
 
 

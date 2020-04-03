@@ -1,8 +1,8 @@
 package indoormaps.ninepatch.com.indoormapsview;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by luca on 14/09/16.
